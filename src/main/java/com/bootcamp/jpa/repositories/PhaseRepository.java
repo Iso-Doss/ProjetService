@@ -5,15 +5,15 @@
  */
 package com.bootcamp.jpa.repositories;
 
-import com.bootcamp.jpa.entities.Fournisseur;
+import com.bootcamp.jpa.entities.Phase;
 
 /**
  *
  * @author Iso-Doss
  */
-public class FournisseurRepository extends BaseRepository<Fournisseur> {
+public class PhaseRepository extends BaseRepository<Phase> {
 
-    public FournisseurRepository(String UnitPersistence) {
-        super(UnitPersistence, Fournisseur.class);
+    public PhaseRepository(String unitPersistence) {
+        super(unitPersistence, Phase.class);
     }
 }

@@ -5,10 +5,9 @@
  */
 package com.bootcamp.jpa.entities;
 
+import com.bootcamp.jpa.enums.EtatProjet;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -21,6 +20,7 @@ import javax.validation.constraints.NotNull;
 public class Projet implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -29,19 +29,12 @@ public class Projet implements Serializable {
     @Column(name = "nom", length = 45, nullable = false)
     private String nom;
 
-    @NotNull(message = "Le champs objectif ne peut etre null.")
-    @Column(name = "objectif", length = 45, nullable = false)
-    private String objectif;
+    @NotNull(message = "Le champs description ne peut etre null.")
+    @Column(name = "description", length = 45, nullable = false)
+    private String description;
 
-    @NotNull(message = "Le champs dateDeDebut ne peut etre null.")
-    @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date dateDeDebut;
-
-    @NotNull(message = "Le champs dateDeFin ne peut etre null.")
-    @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date dateDeFin;
+    @Column(name = "idObjectifs")
+    private List<Integer> idObjectifs = new ArrayList<Integer>();
 
     @NotNull(message = "Le champs budgetPrevisionnel ne peut etre null.")
     @Column(nullable = false)
@@ -51,43 +44,61 @@ public class Projet implements Serializable {
     @Column(nullable = false)
     private double budgetEffectif;
 
-    @NotNull(message = "Le champs programme ne peut etre null.")
-    @ManyToOne
-    @JoinColumn(name = "programme", referencedColumnName = "id")
-    private Programme programme;
+    @Column(name = "idImpacts")
+    private List<Integer> idImpacts = new ArrayList<Integer>();
 
-    @NotNull(message = "Le champs indicateurPerformance ne peut etre null.")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private IndicateurPerformance indicateurPerformance;
+    @NotNull(message = "Le champs cout reel ne peut etre null.")
+    @Column(name = "coutReel", nullable = false)
+    private double coutReel;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "projet")
-    private List<Livrable> livrables = new ArrayList<Livrable>();
+    @NotNull(message = "Le champs date debut previsionnelle ne peut etre null.")
+    @Column(name = "dateDebutPrevisionnelle", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date dateDebutPrevisionnelle;
 
-    @ManyToMany(cascade = {
-        CascadeType.PERSIST,
-        CascadeType.MERGE
-    })
-    @JoinTable(name = "tp_projet_fournisseur",
-            joinColumns = @JoinColumn(name = "projet_id"),
-            inverseJoinColumns = @JoinColumn(name = "fournisseur_id")
-    )
-    private List<Fournisseur> fournisseurs = new ArrayList<Fournisseur>();
+    @NotNull(message = "Le champs date fin previsionnelle ne peut etre null.")
+    @Column(name = "dateFinPrevisionnelle", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date dateFinPrevisionnelle;
 
-    @ManyToMany(cascade = {
-        CascadeType.PERSIST,
-        CascadeType.MERGE
-    })
-    @JoinTable(name = "tp_projet_bailleur",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "bailleur_id")
-    )
-    private List<Bailleur> bailleurs = new ArrayList<Bailleur>();
+    @NotNull(message = "Le champs date debut reelle ne peut etre null.")
+    @Column(name = "dateDebutReelle", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date dateDebutReelle;
 
-    @JoinTable(name = "tp_projet_beneficiaire",
-            joinColumns = @JoinColumn(name = "projet_id"),
-            inverseJoinColumns = @JoinColumn(name = "beneficiaire_id")
-    )
-    private List<Beneficiaire> beneficiaires = new ArrayList<Beneficiaire>();
+    @NotNull(message = "Le champs date fin reelle ne peut etre null.")
+    @Column(name = "dateFinReelle", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date dateFinReelle;
+
+    @Column(name = "idPhases")
+    private List<Integer> idPhases = new ArrayList<Integer>();
+
+    @Column(name = "idPhasesActuelle")
+    private int idPhasesActuelle;
+
+    @NotNull(message = "Le champ etat projet ne peut etre null.")
+    @Column(name = "etatProjet", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EtatProjet etatProjet;
+
+    @Column(name = "idProgramme")
+    private int idProgramme;
+
+    @Column(name = "idIndicateurPerformance")
+    private int idIndicateurPerformance;
+
+    @Column(name = "idLivrables")
+    private List<Integer> idLivrables = new ArrayList<Integer>();
+
+    @Column(name = "idFournisseurs")
+    private List<Integer> idFournisseurs = new ArrayList<Integer>();
+
+    @Column(name = "idBailleurs")
+    private List<Integer> idBailleurs = new ArrayList<Integer>();
+
+    @Column(name = "idBeneficiaires")
+    private List<Integer> idBeneficiaires = new ArrayList<Integer>();
 
     public int getId() {
         return id;
@@ -111,10 +122,7 @@ public class Projet implements Serializable {
             return false;
         }
         Projet other = (Projet) object;
-        if (this.id != other.id) {
-            return false;
-        }
-        return true;
+        return this.id == other.id;
     }
 
     @Override
@@ -137,157 +145,241 @@ public class Projet implements Serializable {
     }
 
     /**
-     * @return the objectif
+     * @return the description
      */
-    public String getObjectif() {
-        return objectif;
+    public String getDescription() {
+        return description;
     }
 
     /**
-     * @param objectif the objectif to set
+     * @param description the description to set
      */
-    public void setObjectif(String objectif) {
-        this.objectif = objectif;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**
-     * @return the dateDeDebut
+     * @return the idObjectifs
      */
-    public Date getDateDeDebut() {
-        return dateDeDebut;
+    public List<Integer> getIdObjectifs() {
+        return idObjectifs;
     }
 
     /**
-     * @param dateDeDebut the dateDeDebut to set
+     * @param idObjectifs the idObjectifs to set
      */
-    public void setDateDeDebut(Date dateDeDebut) {
-        this.dateDeDebut = dateDeDebut;
+    public void setIdObjectifs(List<Integer> idObjectifs) {
+        this.idObjectifs = idObjectifs;
     }
 
     /**
-     * @return the dateDeFin
+     * @return the idImpacts
      */
-    public Date getDateDeFin() {
-        return dateDeFin;
+    public List<Integer> getIdImpacts() {
+        return idImpacts;
     }
 
     /**
-     * @param dateDeFin the dateDeFin to set
+     * @param idImpacts the idImpacts to set
      */
-    public void setDateDeFin(Date dateDeFin) {
-        this.dateDeFin = dateDeFin;
+    public void setIdImpacts(List<Integer> idImpacts) {
+        this.idImpacts = idImpacts;
     }
 
     /**
-     * @return the budgetPrevisionnel
+     * @return the coutReel
      */
-    public double getBudgetPrevisionnel() {
-        return budgetPrevisionnel;
+    public double getCoutReel() {
+        return coutReel;
     }
 
     /**
-     * @param budgetPrevisionnel the budgetPrevisionnel to set
+     * @param coutReel the coutReel to set
      */
-    public void setBudgetPrevisionnel(double budgetPrevisionnel) {
-        this.budgetPrevisionnel = budgetPrevisionnel;
+    public void setCoutReel(double coutReel) {
+        this.coutReel = coutReel;
     }
 
     /**
-     * @return the budgetEffectif
+     * @return the dateDebutPrevisionnelle
      */
-    public double getBudgetEffectif() {
-        return budgetEffectif;
+    public Date getDateDebutPrevisionnelle() {
+        return dateDebutPrevisionnelle;
     }
 
     /**
-     * @param budgetEffectif the budgetEffectif to set
+     * @param dateDebutPrevisionnelle the dateDebutPrevisionnelle to set
      */
-    public void setBudgetEffectif(double budgetEffectif) {
-        this.budgetEffectif = budgetEffectif;
+    public void setDateDebutPrevisionnelle(Date dateDebutPrevisionnelle) {
+        this.dateDebutPrevisionnelle = dateDebutPrevisionnelle;
     }
 
     /**
-     * @return the programme
+     * @return the dateFinPrevisionnelle
      */
-    public Programme getProgramme() {
-        return programme;
+    public Date getDateFinPrevisionnelle() {
+        return dateFinPrevisionnelle;
     }
 
     /**
-     * @param programme the programme to set
+     * @param dateFinPrevisionnelle the dateFinPrevisionnelle to set
      */
-    public void setProgramme(Programme programme) {
-        this.programme = programme;
+    public void setDateFinPrevisionnelle(Date dateFinPrevisionnelle) {
+        this.dateFinPrevisionnelle = dateFinPrevisionnelle;
     }
 
     /**
-     * @return the indicateurPerformance
+     * @return the dateDebutReelle
      */
-    public IndicateurPerformance getIndicateurPerformance() {
-        return indicateurPerformance;
+    public Date getDateDebutReelle() {
+        return dateDebutReelle;
     }
 
     /**
-     * @param indicateurPerformance the indicateurPerformance to set
+     * @param dateDebutReelle the dateDebutReelle to set
      */
-    public void setIndicateurPerformance(IndicateurPerformance indicateurPerformance) {
-        this.indicateurPerformance = indicateurPerformance;
+    public void setDateDebutReelle(Date dateDebutReelle) {
+        this.dateDebutReelle = dateDebutReelle;
     }
 
     /**
-     * @return the livrables
+     * @return the dateFinReelle
      */
-    public List<Livrable> getLivrables() {
-        return livrables;
+    public Date getDateFinReelle() {
+        return dateFinReelle;
     }
 
     /**
-     * @param livrables the livrables to set
+     * @param dateFinReelle the dateFinReelle to set
      */
-    public void setLivrables(List<Livrable> livrables) {
-        this.livrables = livrables;
+    public void setDateFinReelle(Date dateFinReelle) {
+        this.dateFinReelle = dateFinReelle;
     }
 
     /**
-     * @return the fournisseurs
+     * @return the idPhases
      */
-    public List<Fournisseur> getFournisseurs() {
-        return fournisseurs;
+    public List<Integer> getIdPhases() {
+        return idPhases;
     }
 
     /**
-     * @param fournisseurs the fournisseurs to set
+     * @param idPhases the idPhases to set
      */
-    public void setFournisseurs(List<Fournisseur> fournisseurs) {
-        this.fournisseurs = fournisseurs;
+    public void setIdPhases(List<Integer> idPhases) {
+        this.idPhases = idPhases;
     }
 
     /**
-     * @return the bailleurs
+     * @return the idPhasesActuelle
      */
-    public List<Bailleur> getBailleurs() {
-        return bailleurs;
+    public int getIdPhasesActuelle() {
+        return idPhasesActuelle;
     }
 
     /**
-     * @param bailleurs the bailleurs to set
+     * @param idPhasesActuelle the idPhasesActuelle to set
      */
-    public void setBailleurs(List<Bailleur> bailleurs) {
-        this.bailleurs = bailleurs;
+    public void setIdPhasesActuelle(int idPhasesActuelle) {
+        this.idPhasesActuelle = idPhasesActuelle;
     }
 
     /**
-     * @return the beneficiaires
+     * @return the etatProjet
      */
-    public List<Beneficiaire> getBeneficiaires() {
-        return beneficiaires;
+    public EtatProjet getEtatProjet() {
+        return etatProjet;
     }
 
     /**
-     * @param beneficiaires the beneficiaires to set
+     * @param etatProjet the etatProjet to set
      */
-    public void setBeneficiaires(List<Beneficiaire> beneficiaires) {
-        this.beneficiaires = beneficiaires;
+    public void setEtatProjet(EtatProjet etatProjet) {
+        this.etatProjet = etatProjet;
+    }
+
+    /**
+     * @return the idProgramme
+     */
+    public int getIdProgramme() {
+        return idProgramme;
+    }
+
+    /**
+     * @param idProgramme the idProgramme to set
+     */
+    public void setIdProgramme(int idProgramme) {
+        this.idProgramme = idProgramme;
+    }
+
+    /**
+     * @return the idIndicateurPerformance
+     */
+    public int getIdIndicateurPerformance() {
+        return idIndicateurPerformance;
+    }
+
+    /**
+     * @param idIndicateurPerformance the idIndicateurPerformance to set
+     */
+    public void setIdIndicateurPerformance(int idIndicateurPerformance) {
+        this.idIndicateurPerformance = idIndicateurPerformance;
+    }
+
+    /**
+     * @return the idLivrables
+     */
+    public List<Integer> getIdLivrables() {
+        return idLivrables;
+    }
+
+    /**
+     * @param idLivrables the idLivrables to set
+     */
+    public void setIdLivrables(List<Integer> idLivrables) {
+        this.idLivrables = idLivrables;
+    }
+
+    /**
+     * @return the idFournisseurs
+     */
+    public List<Integer> getIdFournisseurs() {
+        return idFournisseurs;
+    }
+
+    /**
+     * @param idFournisseurs the idFournisseurs to set
+     */
+    public void setIdFournisseurs(List<Integer> idFournisseurs) {
+        this.idFournisseurs = idFournisseurs;
+    }
+
+    /**
+     * @return the idBailleurs
+     */
+    public List<Integer> getIdBailleurs() {
+        return idBailleurs;
+    }
+
+    /**
+     * @param idBailleurs the idBailleurs to set
+     */
+    public void setIdBailleurs(List<Integer> idBailleurs) {
+        this.idBailleurs = idBailleurs;
+    }
+
+    /**
+     * @return the idBeneficiaires
+     */
+    public List<Integer> getIdBeneficiaires() {
+        return idBeneficiaires;
+    }
+
+    /**
+     * @param idBeneficiaires the idBeneficiaires to set
+     */
+    public void setIdBeneficiaires(List<Integer> idBeneficiaires) {
+        this.idBeneficiaires = idBeneficiaires;
     }
 
 }

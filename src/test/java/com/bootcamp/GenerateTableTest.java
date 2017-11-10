@@ -5,17 +5,42 @@ import org.testng.annotations.Test;
 import java.util.*;
 
 /**
- * Created by darextossa on 9/22/17.
+ *
+ * @author Iso-Doss
  */
 public class GenerateTableTest {
 
-    //@Test
-    public void generateTablesMysql() {
+    /**
+     * Méthode pour generer la structure de la base de donnee MySql
+     */
+    @Test
+    public void generateTablesMySql() {
         Persistence.generateSchema("tpJpa", new Properties());
     }
 
-    //@Test
+    /**
+     * Méthode pour generer la structure de la base de donnee Derby
+     *
+     */
+    @Test
     public void generateTablesDerby() {
         Persistence.generateSchema("com.bootcamp_TpJPA", new Properties());
+    }
+
+    /**
+     * Méthode pour generer la structure de la base de donnee MySql Service
+     */
+    @Test
+    public void generateTablesMySqlService() {
+        Persistence.generateSchema("tpservice-mysql", new Properties());
+    }
+
+    /**
+     * Méthode pour generer la structure de la base de donnee Derby Service
+     *
+     */
+    @Test
+    public void generateTablesDerbyService() {
+        Persistence.generateSchema("tpservice-derby", new Properties());
     }
 }

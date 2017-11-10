@@ -16,11 +16,11 @@ import javax.ws.rs.*;
  *
  * @author Iso-Doss
  */
-@Path("/projets")
-public class ProjetRestController {
+@Path("/phases")
+public class PhaseRestController {
 
-    private ProjetRepository derby = new ProjetRepository("com.bootcamp_TpJPA");
-    private ProjetRepository mysql = new ProjetRepository("tpJpa");
+    private PhaseRepository derby = new PhaseRepository("com.bootcamp_TpJPA");
+    private PhaseRepository mysql = new PhaseRepository("tpJpa");
 
     /**
      *
@@ -30,11 +30,11 @@ public class ProjetRestController {
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getList() throws SQLException {
-        List<Projet> projets = getDerby().findAll();
-        if (projets == null) {
-            return Response.status(404).entity(projets).build();
+        List<Phase> phases = getDerby().findAll();
+        if (phases == null) {
+            return Response.status(404).entity(phases).build();
         } else {
-            return Response.status(200).entity(projets).build();
+            return Response.status(200).entity(phases).build();
         }
     }
 
@@ -48,12 +48,12 @@ public class ProjetRestController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getListById(@PathParam("id") int id) throws SQLException {
-        Projet projet = getDerby().findById("id", id);
+        Phase phase = getDerby().findById("id", id);
 
-        if (projet == null) {
-            return Response.status(404).entity(projet).build();
+        if (phase == null) {
+            return Response.status(404).entity(phase).build();
         } else {
-            return Response.status(200).entity(projet).build();
+            return Response.status(200).entity(phase).build();
         }
     }
 
@@ -68,12 +68,12 @@ public class ProjetRestController {
     @Path("/parametre/{champs}/{valeur}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getListByParam(@PathParam("champs") String champs, @PathParam("valeur") String valeur) throws SQLException {
-        List<Projet> projets = (List<Projet>) getDerby().findByProperty(champs, valeur);
+        List<Phase> phases = (List<Phase>) getDerby().findByProperty(champs, valeur);
 
-        if (projets == null) {
-            return Response.status(404).entity(projets).build();
+        if (phases == null) {
+            return Response.status(404).entity(phases).build();
         } else {
-            return Response.status(200).entity(projets).build();
+            return Response.status(200).entity(phases).build();
         }
     }
 
@@ -87,66 +87,66 @@ public class ProjetRestController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDeleteListByParam(@PathParam("id") int id) throws SQLException {
-        Projet projet = getDerby().findById("id", id);
-        getDerby().delete(projet);
-        Projet projetDelete = getDerby().findById("id", id);
+        Phase phase = getDerby().findById("id", id);
+        getDerby().delete(phase);
+        Phase phaseDelete = getDerby().findById("id", id);
 
-        if (projetDelete == null) {
-            return Response.status(200).entity(projet).build();
+        if (phaseDelete == null) {
+            return Response.status(200).entity(phase).build();
         } else {
-            return Response.status(404).entity(projet).build();
+            return Response.status(404).entity(phase).build();
         }
     }
 
     /**
      * 
-     * @param projet
+     * @param phase
      * @throws SQLException 
      */
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void create(Projet projet) throws SQLException {
-        getDerby().create(projet);
+    public void create(Phase phase) throws SQLException {
+        getDerby().create(phase);
     }
 
     /**
      * 
-     * @param projet
+     * @param phase
      * @throws SQLException 
      */
     @PUT
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void update(Projet projet) throws SQLException {
-        getDerby().create(projet);
+    public void update(Phase phase) throws SQLException {
+        getDerby().create(phase);
     }
 
     /**
      * @return the derby
      */
-    public ProjetRepository getDerby() {
+    public PhaseRepository getDerby() {
         return derby;
     }
 
     /**
      * @param derby the derby to set
      */
-    public void setDerby(ProjetRepository derby) {
+    public void setDerby(PhaseRepository derby) {
         this.derby = derby;
     }
 
     /**
      * @return the mysql
      */
-    public ProjetRepository getMysql() {
+    public PhaseRepository getMysql() {
         return mysql;
     }
 
     /**
      * @param mysql the mysql to set
      */
-    public void setMysql(ProjetRepository mysql) {
+    public void setMysql(PhaseRepository mysql) {
         this.mysql = mysql;
     }
 

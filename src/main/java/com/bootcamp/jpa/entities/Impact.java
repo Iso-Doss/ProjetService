@@ -5,8 +5,8 @@
  */
 package com.bootcamp.jpa.entities;
 
+import com.bootcamp.jpa.enums.TypeImapct;
 import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -14,14 +14,12 @@ import javax.validation.constraints.NotNull;
  *
  * @author Iso-Doss
  */
-@Entity(name = "Personne")
-@Table(name = "tp_personne")
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "TYPE_ENTITE")
-@DiscriminatorValue("TP_PERSONNE")
-public class Personne implements Serializable {
+@Entity(name = "Impact")
+@Table(name = "tp_impact")
+public class Impact implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -29,6 +27,11 @@ public class Personne implements Serializable {
     @NotNull(message = "Le champs nom ne peut etre null.")
     @Column(name = "nom", nullable = false)
     private String nom;
+
+    @NotNull(message = "Le champ type d'impact ne peut etre null.")
+    @Column(name = "typeDeImpact", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TypeImapct typeImapct;
 
     public int getId() {
         return id;
@@ -48,19 +51,16 @@ public class Personne implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Personne)) {
+        if (!(object instanceof Impact)) {
             return false;
         }
-        Personne other = (Personne) object;
-        if (this.id != other.id) {
-            return false;
-        }
-        return true;
+        Impact other = (Impact) object;
+        return this.id == other.id;
     }
 
     @Override
     public String toString() {
-        return "com.bootcamp.jpa.entities.Personne[ id=" + id + " ]";
+        return "com.bootcamp.jpa.entities.Impact[ id=" + id + " ]";
     }
 
     /**
@@ -75,6 +75,20 @@ public class Personne implements Serializable {
      */
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    /**
+     * @return the typeImapct
+     */
+    public TypeImapct getTypeImapct() {
+        return typeImapct;
+    }
+
+    /**
+     * @param typeImapct the typeImapct to set
+     */
+    public void setTypeImapct(TypeImapct typeImapct) {
+        this.typeImapct = typeImapct;
     }
 
 }

@@ -9,9 +9,12 @@ package com.bootcamp.jpa.enums;
  *
  * @author Iso-Doss
  */
-public enum TypeDeBailleur {
-    gouvernementales,
-    privé,
-    gouvernement,
-    partenaire_international;
+public enum EtatProjet {
+    pré_étude,
+    financement,
+    recrutement_fournisseurs,
+    exécution,
+    abandonné,
+    suspendu,
+    achevé;
 }
